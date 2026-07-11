@@ -1,0 +1,10 @@
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+*.class
+*.jar
+*.war
+*.ear
