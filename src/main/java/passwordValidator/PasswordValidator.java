@@ -50,7 +50,7 @@ public class PasswordValidator {
 
     public static boolean isValidPassword(String Password){
         boolean pass = false;
-        if (hasSymbols(Password) && hasNumbers(Password) && hasLetters(Password) && isPasswordLengthValid(Password) == true){
+        if (isPasswordLengthValid(Password) && hasLetters(Password)  && hasNumbers(Password) && hasSymbols(Password) == true){
             pass = true;
         }
     return pass;
