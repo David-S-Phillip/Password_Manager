@@ -1,4 +1,5 @@
 package main;
+import hashing.Hasher;
 import passwordValidator.PasswordValidator;
 
 import java.util.Scanner;
@@ -23,6 +24,14 @@ public class Main {
                 System.out.println("Please try again.\n");
             }
         }
+
+        String hashedPassword = Hasher.hashPassword(password);
+
+        System.out.println("=== Vault secured ===");
+        System.out.println("Raw Input: " + password);
+        System.out.println("SHA-256 Hash: " + hashedPassword);
+
+        userInput.close();
 
 
     }
