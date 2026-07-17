@@ -18,4 +18,21 @@ public class Store {
     public Map<String, Account> getPasswordMap(){
         return Collections.unmodifiableMap(this.passwordMap);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== Password Vault Contents ===\n");
+
+        if (this.passwordMap.isEmpty()) {
+            sb.append("Vault is currently empty.");
+        } else {
+            // Iterate through each Account object in the unmodifiable map
+            for (Account account : getPasswordMap().values()) {
+                sb.append(account.toString()).append("\n");
+            }
+        }
+
+        return sb.toString();
+    }
 }

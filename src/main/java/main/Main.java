@@ -1,6 +1,8 @@
 package main;
 import hashing.Hasher;
 import passwordValidator.PasswordValidator;
+import storage.Account;
+import storage.Store;
 
 import java.util.Scanner;
 
@@ -10,6 +12,8 @@ public class Main {
         Scanner userInput = new Scanner(System.in);
         boolean isPasswordValid = false;
         String password = "";
+        System.out.println("Please enter your user name: ");
+        String userName = userInput.nextLine();
 
         while (!isPasswordValid) {
             System.out.println("please enter password: ");
@@ -26,10 +30,13 @@ public class Main {
         }
 
         String hashedPassword = Hasher.hashPassword(password);
+        Account newAccount = new Account(userName, hashedPassword);
+        Store storePasswords = new Store();
+        storePasswords.addAccount(userName, newAccount);
+
 
         System.out.println("=== Vault secured ===");
-        System.out.println("Raw Input: " + password);
-        System.out.println("SHA-256 Hash: " + hashedPassword);
+        System.out.println(storePasswords.toString());
 
         userInput.close();
 

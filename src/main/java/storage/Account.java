@@ -17,5 +17,10 @@ public class Account {
         return this.hashedPassword;
     }
 
+    @Override
+    public String toString() {
+        return "User: " + this.userName + " | Hash: " + this.hashedPassword;
+    }
+
 
 }
