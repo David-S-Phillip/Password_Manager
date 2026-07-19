@@ -22,7 +22,7 @@ public class Hasher {
             return hexString.toString();
 
             }    catch(NoSuchAlgorithmException e){
-            throw new RuntimeException("Error: Hashing algorim not found!");
+            throw new RuntimeException("Error: Hashing algorithm not found!");
         }
     }
 }
