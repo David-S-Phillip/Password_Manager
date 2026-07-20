@@ -22,4 +22,5 @@ public class StoreTest {
         storeHashMap.addAccount(acc.getUserName(),acc);
         Assertions.assertEquals(1,storeHashMap.getPasswordMap().size());
     }
+
 }

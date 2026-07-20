@@ -30,4 +30,29 @@ public class AccountTest {
         String toString = acc.toString();
         Assertions.assertEquals("User: Bob | Hash: 5a70fc1e224f429834df9aeec8f8ad915be96fc410ac913022d56d4a1569cb69", toString);
     }
+
+    @Test
+    public void testEmptyUserNameHashedPassword(){
+        Assertions.assertThrows(IllegalArgumentException.class, () ->{
+            Account emptyAccUserName = new Account("","");
+        });
+    }
+
+    @Test
+    public void testEmptyHashedPassword(){
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            Account emptyPassword = new Account("Bob","");
+        });
+
+        Assertions.assertEquals("Username or Password cannot be empty", exception.getMessage());
+    }
+
+    @Test
+    public void testNullValues(){
+        NullPointerException exception = Assertions.assertThrows(NullPointerException.class, () -> {
+            Account nullAccount = new Account(null,null);
+        });
+
+        Assertions.assertEquals("Username or Password cannot be null", exception.getMessage());
+    }
 }
