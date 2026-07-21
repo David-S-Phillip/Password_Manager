@@ -8,10 +8,10 @@ public class Account {
         if (userName == null || hashedPassword == null) {
             throw new NullPointerException("Username or Password cannot be null");
         }
-        if (userName.isEmpty() || hashedPassword.isEmpty()){
+        if (userName.isBlank() || hashedPassword.isBlank()){
             throw new IllegalArgumentException("Username or Password cannot be empty");
         }else{
-            this.userName = userName;
+            this.userName = userName.trim();
             this.hashedPassword = hashedPassword;
         }
     }

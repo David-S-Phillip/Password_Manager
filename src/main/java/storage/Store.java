@@ -12,7 +12,11 @@ public class Store {
     }
 
     public void addAccount(String userName, Account account){
-        this.passwordMap.put(userName, account);
+        if (userName == null || userName.isBlank() || account == null){
+            throw new IllegalArgumentException("Something is null or blank figure it out my guy");
+        }else{
+            passwordMap.put(userName, account);
+        }
     }
 
     public Map<String, Account> getPasswordMap(){
