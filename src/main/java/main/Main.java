@@ -3,7 +3,9 @@ import hashing.Hasher;
 import passwordValidator.PasswordValidator;
 import storage.Account;
 import storage.Store;
+import storage.VaultFileManager;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -33,6 +35,15 @@ public class Main {
         Account newAccount = new Account(userName, hashedPassword);
         Store storePasswords = new Store();
         storePasswords.addAccount(userName, newAccount);
+        VaultFileManager fileManager = new VaultFileManager("vault.txt");
+        try {
+            // Hand the map straight from Store to the file manager to write to disk
+            fileManager.saveVault(storePasswords.getPasswordMap());
+            System.out.println("Vault saved to text file successfully!");
+
+        } catch (IOException e) {
+            System.err.println("Failed to write vault to file: " + e.getMessage());
+        }
 
 
         System.out.println("=== Vault secured ===");
