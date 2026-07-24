@@ -1,5 +1,6 @@
 passwordValidator/PasswordValidator.class
 hashing/Hasher.class
 storage/Account.class
+storage/VaultFileManager.class
 main/Main.class
 storage/Store.class

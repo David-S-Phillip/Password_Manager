@@ -42,7 +42,7 @@ public class VaultFileManagerTest {
         fileManager.saveVault(testMapBob);
         List<String> lines = Files.readAllLines(testFilePath);
         assertEquals(1, lines.size());
-        Assertions.assertEquals("Bob,b83dfdd8aaad716e1fcc91f582530164b0c40055a200cd2919a96bf148f6d512", lines.get(0));
+        Assertions.assertEquals("Bob | b83dfdd8aaad716e1fcc91f582530164b0c40055a200cd2919a96bf148f6d512", lines.get(0));
 
 
     }

@@ -30,7 +30,7 @@ public class VaultFileManager {
                 Account accountObj = entry.getValue();
 
                 // Format each line: username,hashedPassword
-                String line = usernameKey + "," + accountObj.getHashedPassword();
+                String line = usernameKey + " | " + accountObj.getHashedPassword();
 
                 writer.write(line);
                 writer.newLine(); // Move to the next line in the text file

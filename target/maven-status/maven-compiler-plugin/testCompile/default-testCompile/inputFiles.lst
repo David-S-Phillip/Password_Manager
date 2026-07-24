@@ -2,4 +2,5 @@
 /home/wtc14/Personal_Projects/Password_Manager/src/test/java/hashing/HasherTest.java
 /home/wtc14/Personal_Projects/Password_Manager/src/test/java/passwordValidator/PasswordValidatorTest.java
 /home/wtc14/Personal_Projects/Password_Manager/src/test/java/storage/AccountTest.java
+/home/wtc14/Personal_Projects/Password_Manager/src/test/java/storage/VaultFileManagerTest.java
 /home/wtc14/Personal_Projects/Password_Manager/src/test/java/storage/StoreTest.java
