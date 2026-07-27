@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class VaultFileManagerTest {
     Account testAcc;
+    Account testAcc2;
+    Account testAcc3;
 
     @TempDir
     Path tempDir;
@@ -30,6 +32,7 @@ public class VaultFileManagerTest {
 
         testMapBob = new HashMap<>();
         testMapBob.put(testAcc.getUserName(), testAcc);
+//        testMapBob.put(testAcc2.getUserName(), testAcc2);
 
         testFilePath = tempDir.resolve("test_vault.txt");
         filePathString = testFilePath.toString();
@@ -46,5 +49,31 @@ public class VaultFileManagerTest {
 
 
     }
+
+    @Test
+    public void testFileContainsHasher() throws IOException {
+        testAcc2 = new Account("Hasher", "b83dfdd8aaad716e1fcc91f582530164b0c40055a200cd2919a96bf148xfd512");
+        testMapBob.put(testAcc2.getUserName(), testAcc2);
+        fileManager.saveVault(testMapBob);
+        List<String> lines = Files.readAllLines(testFilePath);
+        Assertions.assertEquals(2, lines.size());
+        Assertions.assertEquals("Hasher | b83dfdd8aaad716e1fcc91f582530164b0c40055a200cd2919a96bf148xfd512", lines.get(0));
+        Assertions.assertEquals("Bob | b83dfdd8aaad716e1fcc91f582530164b0c40055a200cd2919a96bf148f6d512", lines.get(1));
+    }
+
+
+    @Test
+    public void testFileContainsRashford() throws IOException{
+        testAcc3 = new Account("Rashford", "b83dfdd8aaad716w2fcc91f582530164b0c40055a200cd2919a96bf148xfd512");
+        testMapBob.clear();
+        testMapBob.put(testAcc3.getUserName(), testAcc3);
+        fileManager.saveVault(testMapBob);
+        List<String> lines = Files.readAllLines(testFilePath);
+        Assertions.assertEquals(1, lines.size());
+        Assertions.assertEquals("Rashford | b83dfdd8aaad716w2fcc91f582530164b0c40055a200cd2919a96bf148xfd512", lines.get(0));
+
+    }
+
+
 
 }
