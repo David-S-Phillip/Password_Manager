@@ -74,6 +74,25 @@ public class VaultFileManagerTest {
 
     }
 
+    @Test
+    public void testEmptyFilePath() {
+        Account testAcc4 = new Account("XAXA", "b83dfdd8aaad716w2fcc91f582530164b0c40055a200cd2919a96bf148xfd512");
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            VaultFileManager nullManager = new VaultFileManager(null);
+        });
+        Assertions.assertEquals("File path cannot be null or empty.", exception.getMessage());
+
+    }
+
+    @Test
+    public void testBlankFilePath(){
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            VaultFileManager blankManager = new VaultFileManager("  ");
+        });
+
+        Assertions.assertEquals("File path cannot be null or empty.", exception.getMessage());
+    }
+
 
 
 }
