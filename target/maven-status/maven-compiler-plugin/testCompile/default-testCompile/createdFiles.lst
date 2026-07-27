@@ -1,6 +1,0 @@
-storage/StoreTest.class
-storage/AccountTest.class
-main/MainTest.class
-passwordValidator/PasswordValidatorTest.class
-hashing/HasherTest.class
-storage/VaultFileManagerTest.class
