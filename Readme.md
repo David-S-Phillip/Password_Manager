@@ -38,3 +38,17 @@ this program is meant to help me understand the design how when creating a syste
 *  * what if the username is not in the map when they try and login again
 
 
+## 🧪 Proof of Concept: Cloud API Integration
+
+As a step toward remote data storage, I built a standalone experimental client (`CloudVaultStorage`) to test sending data over the network using Java 11+ `java.net.http.HttpClient`.
+
+### How It Works
+1. **Payload Construction:** A JSON-formatted string representing vault data is constructed manually in Java.
+    *  String dummyVaultJson = "{\"user\": \"david\", \"vault\": [{\"service\": \"github\", \"pass\": \"encrypted_hash_123\"}]}"; --> this is the string i sent over to JsonBin.io
+       CloudStorage cloudStorage = new CloudStorage();
+       cloudStorage.uploadVaultToCloud(dummyVaultJson);
+2. **HTTP Communication:** Using `HttpClient`, the application constructs an `HttpRequest` with `POST` headers (`Content-Type: application/json` and `X-Master-Key`).
+3. **Cloud Storage:** The payload is transmitted over HTTPS to the JSONBin.io REST API.
+4. **Verification:** The API returns an HTTP `200 OK` status and a unique `binId` confirming the data was received and stored in the cloud.
+
+*Note: This feature is currently a working proof-of-concept and has not yet been integrated into the main password manager workflow.*

@@ -2,6 +2,7 @@ package main;
 import hashing.Hasher;
 import passwordValidator.PasswordValidator;
 import storage.Account;
+import storage.CloudStorage;
 import storage.Store;
 import storage.VaultFileManager;
 
@@ -10,6 +11,10 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String [] args){
+        String dummyVaultJson = "{\"user\": \"david\", \"vault\": [{\"service\": \"github\", \"pass\": \"encrypted_hash_123\"}]}";
+
+        CloudStorage cloudStorage = new CloudStorage();
+        cloudStorage.uploadVaultToCloud(dummyVaultJson);
         System.out.println("Welcome to the password vault");
         Scanner userInput = new Scanner(System.in);
         boolean isPasswordValid = false;
