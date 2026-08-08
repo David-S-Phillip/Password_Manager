@@ -1,42 +1,77 @@
 package storage;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class CloudStorage {
-    // create a reusable Http client
-    private final HttpClient client = HttpClient.newHttpClient();
-    private static final String API_KEY = "$2a$10$zsaFohdm/zR/zv779m7TIeeE58/c/r4mtFb85BQQOXdmUCa1TlJ3W";
+    private final HttpClient client;
+    private final String apiKey;
     private static final String API_URL = "https://api.jsonbin.io/v3/b";
 
-    public void uploadVaultToCloud(String jsonVaultData) {
+    public CloudStorage(){
+        this(HttpClient.newHttpClient(), System.getenv("JSONBIN_KEY"));
+    }
+
+    public CloudStorage(HttpClient client, String apiKey){
+        this.client = client;
+        this.apiKey = apiKey;
+    }
+
+    /**
+     * SRP -- implementing single responsibility each method should only do one thing and one thing only
+     */
+    public boolean uploadVaultToCloud(String binId, String jsonVaultData){
+        if (!isApiKeyValid()){
+            System.err.println("Error: API key is missing or empty my gazzi, did you give it a lift?");
+            return false;
+        }
+
         try {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(API_URL))
-                    .header("Content-Type", "application/json")
-                    .header("X-Master-Key", API_KEY)
-                    .header("X-Bin-Name", "password_vault_backup")
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonVaultData))
-                    .build();
+            HttpRequest request = buildPutRequest(binId, jsonVaultData);
+            HttpResponse<String> response = sendRequest(request);
 
-            System.out.println("Sending vault data to cloud...");
-
-            // Send the request synchronously and capture the response
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            // 4. Inspect the Result
-            System.out.println("HTTP Response Code: " + response.statusCode());
-            System.out.println("Server Response: " + response.body());
-
-            if (response.statusCode() == 200) {
-                System.out.println("SUCCESS: Vault backed up to cloud!");
-            } else {
-                System.out.println("FAILED: Server returned error status.");
-            }
-
-        } catch (Exception e) {
-            System.out.println("Network error: Could not reach API -> " + e.getMessage());
+            logResponse(response);
+            return response.statusCode() == 200;
+        } catch(Exception e){
+            System.err.println("Network error: Could not reach API -> " + e.getMessage());
+            return false;
         }
     }
+
+    /**
+     * Helper methods (SRP)
+     */
+
+    private boolean isApiKeyValid(){
+        return apiKey != null && !apiKey.isBlank();
+    }
+
+    private HttpRequest buildPutRequest(String binId, String jsonVaultData){
+        return HttpRequest.newBuilder()
+                .uri(URI.create(API_URL + "/" + binId))
+                .header("Content-Type", "application/json")
+                .header("X-Master-Key",apiKey)
+                .PUT(HttpRequest.BodyPublishers.ofString(jsonVaultData))
+                .build();
+    }
+
+    private HttpResponse<String> sendRequest(HttpRequest request) throws Exception {
+        System.out.println("Sending vault data to cloud");
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
+
+    }
+
+    private void logResponse(HttpResponse<String> response){
+        System.out.println("HTTP Response Code: " + response.statusCode());
+        System.out.println("Server Response: " + response.body());
+        if (response.statusCode() == 200){
+            System.out.println("Success: Vault back up to cloud");
+        }else{
+            System.out.println("Failed: Server returned error status");
+        }
+    }
+
+
 }

@@ -52,3 +52,92 @@ As a step toward remote data storage, I built a standalone experimental client (
 4. **Verification:** The API returns an HTTP `200 OK` status and a unique `binId` confirming the data was received and stored in the cloud.
 
 *Note: This feature is currently a working proof-of-concept and has not yet been integrated into the main password manager workflow.*
+
+## 🛠️ Developer Workflow & Automation (`Makefile`)
+
+This project includes a `Makefile` to automate common development tasks, OS-level operations, and testing workflows.
+
+> **Note:** A Makefile is purely a local developer tool—it runs on the OS level to chain terminal commands and will not affect the production build.
+
+---
+
+### 🚀 Available Commands
+
+Run these shortcuts from the root of the project:
+
+| Command | Action |
+| :--- | :--- |
+| `make help` | Lists all available targets and descriptions. |
+| `make compile` | Compiles Java code cleanly using Maven. |
+| `make test` | Executes the full JUnit test suite via Maven. |
+| `make push m="your commit message"` | Runs tests first; if they pass, automatically stages, commits, and pushes code to GitLab. |
+| `make clean` | Cleans up local build outputs and the target directory. |
+
+---
+
+### 🧠 Core Concepts & Cheatsheet
+
+* **Why Make + Maven?** Maven handles Java compilation, dependencies, and unit tests. Make handles OS-level tasks (managing background processes, checking network ports, chaining multi-step workflows).
+* **What is `.PHONY`?** Tells Make that targets (like `compile` or `clean`) are command names, preventing conflicts if a folder or file with the same name exists in the project root.
+* **Tabs vs Spaces:** Makefiles strictly require true **Tab** indentations for execution blocks.
+* **No File Extension:** The file must be named strictly `Makefile` (no `.txt` or `.md` extension).
+
+---
+
+### 📝 Sample `Makefile` Reference
+
+```makefile
+MVN = mvn
+
+.PHONY: help compile test push clean
+
+help:
+	@echo "Available shortcuts:"
+	@echo "  make compile            - Build Java source files"
+	@echo "  make test               - Run unit tests"
+	@echo "  make push m=\"msg\"       - Run tests, stage, commit, and push"
+	@echo "  make clean              - Clean build directory"
+
+compile:
+	$(MVN) clean compile
+
+test:
+	$(MVN) test
+
+# Safety Gate: Runs tests BEFORE allowing git commit/push
+push:
+	@if [ -z "$(m)" ]; then \
+		echo "❌ Error: Missing commit message. Use: make push m=\"your message\""; \
+		exit 1; \
+	fi
+	@echo "🧪 Running test suite..."
+	$(MVN) test
+	@echo "✅ Tests passed! Staging and pushing to remote..."
+	git add .
+	git commit -m "$(m)"
+	git push
+
+clean:
+	$(MVN) clean
+
+## Cloud Storage Backup Module (`CloudStorage`)
+
+The `CloudStorage` class handles backing up local encrypted vault data to a remote cloud repository (JSONBin API) using Java’s native HTTP Client.
+
+### Architectural Highlights & OOP Patterns
+
+1. **Dependency Injection & Constructor Chaining**
+   - Implements constructor overloading using `this(...)` chaining. 
+   - **Production Constructor:** Uses environment variables (`System.getenv("JSONBIN_KEY")`) and defaults to standard `HttpClient.newHttpClient()`.
+   - **Test Constructor:** Accepts custom or mocked `HttpClient` and `apiKey` dependencies to allow isolated testing without hitting real network endpoints.
+
+2. **Abstraction & Single Responsibility Principle (SRP)**
+   - Exposes a clean, single high-level interface method: `uploadVaultToCloud(String binId, String jsonVaultData)`.
+   - Encapsulates complex request construction, header mapping, network transmission, and response parsing behind `private` helper methods (`buildPutRequest`, `sendRequest`, `logResponse`).
+
+3. **Guard Clause Validation**
+   - Validates API credentials early (`isApiKeyValid()`) before attempting network overhead, failing gracefully if keys are missing.
+
+4. **Unit Testing Strategy**
+   - Fully unit-tested using **JUnit 5** and **Mockito 5**.
+   - Mocks network socket execution (`HttpClient.send(...)`) and HTTP responses (`HttpResponse<String>`) to verify 200 OK success paths, 401 Unauthorized handling, missing API keys, and network exception recovery.
